@@ -29,13 +29,13 @@ Gợi ý chọn người: người code mạnh nhất → TV5; người hiểu t
 
 | Hạn | Việc | File nộp / nơi để |
 |---|---|---|
-| T2 26/10 | Tạo repo, Drive, milestone, issue; mời thành viên; họp kickoff 30 phút | Repo GitHub, Drive |
-| T2 26/10 | Hỏi thầy 4 điểm ở mục 5 file 00 | Ghi kết quả vào file 00 |
+| T2 26/10 | Tạo repo, Drive; add thành viên; gửi phân công vào nhóm chat | Repo GitHub, Drive |
 | **T5 29/10** | ⚠️ **Chạy prompt bước S** (khối Chủ đề 12) với số Lớp 1 lấy từ TV3 → sửa thành bảng 6 cột → đề cương 1 trang (**Mốc 1**) | `docs/S_bang_cau_hoi.md`; Drive `05_Phu_luc/De_cuong_moc1.docx` |
 | T5 29/10 | ⚠️ Ghi **toàn văn prompt + phản hồi AI** + phần giữ/sửa/bỏ vào Nhật ký AI | Drive `05_Phu_luc/Nhat_ky_AI` (Google Sheets) |
 | T5 29/10 | Cùng TV3 chốt bảng giả thuyết (**Mốc 3**) | `docs/A_gia_thuyet.md` |
 | Liên tục | Giữ **Sổ giả định** khớp với `config.yaml` | Drive `05_Phu_luc/So_gia_dinh` |
-| T2 02/11 | Chủ trì họp chốt thiết kế (μ, Σ) theo kết quả validation | Issue "Chốt thiết kế" |
+| T6 30/10 | Tra **bối cảnh thị trường CK VN 2017–2026** (COVID 2020, giảm mạnh 2022, mức giảm VN-Index), lý do chọn VN30; ghi nguồn từng ý | Google Docs report, phần 1–2 (bản nháp 1 trang) |
+| T2 02/11 | Chốt thiết kế (μ, Σ) theo kết quả validation cùng TV4, TV5, thông báo nhóm chat | Nhóm chat, cập nhật `config.yaml` |
 | **T5 05/11** | Viết Tóm tắt điều hành (≤1 trang), phần 1, 2, 3, 7, phụ lục AI + đạo đức; đọc duyệt toàn bộ report | Google Docs report |
 | **CN 08/11** | Kiểm tra checklist, nộp Drive, chuyển repo public / mời thầy | Thư mục nộp |
 
@@ -48,10 +48,10 @@ Gợi ý chọn người: người code mạnh nhất → TV5; người hiểu t
 | T3 27/10 | Tra danh sách **VN30 kỳ xem xét 1/2020** (thông báo HOSE), lưu nguồn; cài môi trường, tải thử 1 mã | `data/raw/vn30_2020.csv` (+ link nguồn) |
 | **T4 28/10** | Tải giá ngày 01/2017–09/2026 cho vũ trụ + VN-Index; tải lợi suất TPCP 10 năm; ETL 4 bước; loại mã thiếu lịch sử | `src/data_loader.py`, `src/clean.py`, `data/raw/*.csv`, `data/processed/prices.csv`, `data/processed/rf.csv` |
 | **T4 28/10** | Từ điển dữ liệu + Nhật ký ETL (số dòng trước/sau, quy tắc làm sạch, cột cờ `imputed`) | Drive `05_Phu_luc/Tu_dien_du_lieu`, `05_Phu_luc/Nhat_ky_ETL` |
-| T5 29/10 | Tìm nguồn cho phí giao dịch, thuế bán, phần bù rủi ro Damodaran → gửi TV1 điền Sổ giả định | Comment vào Issue "Sổ giả định" |
+| T5 29/10 | Tìm nguồn cho phí giao dịch, thuế bán, phần bù rủi ro Damodaran → gửi TV1 điền Sổ giả định | Gửi TV1 qua nhóm chat |
 | T5 29/10 | ⚠️ Đọc cột **"Dữ liệu cần thu thập thêm"** trong bảng 6 cột của TV1 → bổ sung dữ liệu nếu thiếu | Cập nhật `data/` |
 | T4 04/11 | Viết **phần 4 (O)** của report | Google Docs report |
-| **T7 07/11** | **Kiểm tra tái lập:** clone repo về máy sạch, chạy `python run_all.py` từ dữ liệu gốc → ra đúng số trong report | Báo kết quả vào Issue |
+| **T7 07/11** | **Kiểm tra tái lập:** clone repo về máy sạch, chạy `python run_all.py` từ dữ liệu gốc → ra đúng số trong report | Báo kết quả vào nhóm chat |
 
 > Lưu ý: lưu CSV thô **ngay khi tải** (vnstock hay đổi API, giới hạn số lần gọi). Kiểm tra **đơn vị giá** (thường là nghìn đồng) và **giá đã điều chỉnh chưa** bằng cách đối chiếu 1–2 lần chia tách/cổ tức thật. Thiếu giá: điền giá trước đó tối đa 5 phiên + cột cờ; thiếu lâu hơn → ghi lại, loại mã ở kỳ tái cân bằng kế tiếp.
 
@@ -72,7 +72,7 @@ Gợi ý chọn người: người code mạnh nhất → TV5; người hiểu t
 
 | Hạn | Việc | File nộp / nơi để |
 |---|---|---|
-| T5 29/10 | Đọc hiểu CAPM, Ledoit–Wolf, Risk Parity; thử PyPortfolioOpt trên dữ liệu của TV2 | Ghi chú trong Issue |
+| T5 29/10 | Đọc hiểu CAPM, Ledoit–Wolf, Risk Parity; thử PyPortfolioOpt trên dữ liệu của TV2 | Gửi ghi chú vào nhóm chat |
 | **CN 01/11** | `src/estimators.py`: μ (CAPM, lịch sử), Σ (mẫu, Ledoit–Wolf), chỉ dùng dữ liệu trong cửa sổ | `src/estimators.py` |
 | **CN 01/11** | `src/optimizers.py`: 1/N, Min Var, Max Sharpe, Risk Parity với ràng buộc w ≥ 0, w ≤ w_max, tổng = 1; báo lỗi nếu vô nghiệm | `src/optimizers.py` |
 | **T2 02/11** | Đánh giá sai số dự báo: biến động dự báo vs thực tế quý sau (RMSE), LW vs Σ mẫu; vẽ **đường biên hiệu quả** có ràng buộc | `notebooks/03_du_bao_duong_bien.ipynb`, `outputs/forecast_error.csv`, `outputs/frontier.csv` |
@@ -86,7 +86,7 @@ Gợi ý chọn người: người code mạnh nhất → TV5; người hiểu t
 | Hạn | Việc | File nộp / nơi để |
 |---|---|---|
 | **T6 30/10** | `src/backtest.py` chạy được với 1/N: tái cân bằng quý, phí, thuế, lô 100, tiền dư, trôi tỷ trọng | `src/backtest.py` |
-| **T2 02/11** | Chạy đủ 4 chiến lược trên **validation 2020–2021** với các phương án μ, Σ → bảng để họp chốt thiết kế | `outputs/validation_results.csv` |
+| **T2 02/11** | Chạy đủ 4 chiến lược trên **validation 2020–2021** với các phương án μ, Σ → bảng để chốt thiết kế | `outputs/validation_results.csv` |
 | **T3 03/11** | 🔒 **ĐÓNG BĂNG SỐ LIỆU:** chạy **test 2022–2026Q3 một lần**; lưới độ nhạy (w_max × tần suất × phí × Rf); kiểm định chênh lệch Sharpe (bootstrap khối); tỷ trọng đề xuất Q4/2026; xuất CSV cho dashboard | `run_all.py`, `outputs/test_results.csv`, `outputs/sensitivity_grid.csv`, `outputs/weights_Q4_2026.csv`, `outputs/equity_curves.csv` |
 | T4 04/11 | Viết **phần 5: Đề xuất** + số liệu cho phần 6 | Google Docs report |
 
@@ -100,6 +100,7 @@ Gợi ý chọn người: người code mạnh nhất → TV5; người hiểu t
 | T6 30/10 | Phác dashboard Power BI bằng dữ liệu tạm (ghi rõ "dữ liệu tạm") | `.pbix` nháp |
 | **T4 04/11** | Dashboard hoàn chỉnh 3 trang từ CSV đã đóng băng: tổng quan, so sánh chiến lược, **what-if** | Drive `04_Dashboard/Dashboard_NhomXX.pbix` + `anh_chup_dashboard.pdf` |
 | T4 04/11 | Viết **phần 6 (R)**: thông điệp chính, ảnh dashboard | Google Docs report |
+| T4 04/11 | Gom **Tài liệu tham khảo**: Richardson & Watson (2023), nguồn dữ liệu, nguồn giả định (TV1, TV2 gửi link) | Google Docs report, mục Tài liệu tham khảo |
 | **T5 05/11** | Ghép report, định dạng thống nhất; slide 10 phút; kịch bản video | Google Docs, slide |
 | **T7 07/11** | Dựng video, xuất `.mp4`; xuất report Word + PDF | Drive `01_Video/`, `02_Report/` |
 
@@ -111,12 +112,12 @@ Gợi ý chọn người: người code mạnh nhất → TV5; người hiểu t
 
 | Ngày | Mốc | Ai |
 |---|---|---|
-| T2 26/10 | Kickoff, repo, Drive, issue | TV1, cả nhóm |
+| T2 26/10 | Repo, Drive; mọi người nhận vai, cài GitHub Desktop + Python | TV1, cả nhóm |
 | T4 28/10 | Dữ liệu sạch, từ điển, nhật ký ETL; `metrics.py`; khung report | TV2, TV3, TV6 |
 | **T5 29/10** | **Mốc 1 (S):** số Lớp 1, ⚠️ prompt bước S, bảng 6 cột, đề cương, nhật ký AI. **Mốc 3:** giả thuyết | TV1, TV3 |
 | T6 30/10 | Backtest chạy với 1/N | TV5 |
 | CN 01/11 | Mô tả + chẩn đoán xong; estimators + optimizers xong | TV3, TV4 |
-| T2 02/11 | Validation xong → **họp chốt thiết kế** | TV5, TV4, TV1 |
+| T2 02/11 | Validation xong → **chốt thiết kế** | TV5, TV4, TV1 |
 | **T3 03/11** | 🔒 **ĐÓNG BĂNG SỐ LIỆU** (sau mốc này không sửa mô hình) | TV5 |
 | T4 04/11 | Dashboard xong; **mọi người nộp phần viết report** | TV6, cả nhóm |
 | T5 05/11 | Report hoàn chỉnh, tóm tắt điều hành, slide, kịch bản; review chéo | TV1, TV6, TV3 |
@@ -128,7 +129,7 @@ Gợi ý chọn người: người code mạnh nhất → TV5; người hiểu t
 
 ## 4. Lưu ý chung (bắt buộc)
 
-1. **Nguồn sự thật:** giả định chỉ nằm ở `config.yaml` (code) và Sổ giả định (report). Muốn đổi → mở Issue, TV1 duyệt. Không gõ cứng con số trong code.
+1. **Nguồn sự thật:** giả định chỉ nằm ở `config.yaml` (code) và Sổ giả định (report). Muốn đổi → nhắn TV1 trong nhóm chat, TV1 duyệt. Không gõ cứng con số trong code.
 2. **Nhật ký AI:** ai dùng AI (viết code, sửa văn, hỏi khái niệm…) phải ghi **ngay** vào Google Sheets `Nhat_ky_AI`: ngày, người, công cụ, mục đích, prompt, tóm tắt phản hồi, giữ/sửa/bỏ + lý do. Không ghi bù cuối kỳ.
 3. **Mọi con số trong report** phải truy ra được file trong `outputs/`.
 4. **Không sửa mô hình sau 03/11.** Phát hiện lỗi → báo TV1, quyết định chung.
