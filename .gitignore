@@ -1,0 +1,12 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+*.pbix
+*.mp4
+*.mov
+~$*
+.DS_Store
+Thumbs.db
