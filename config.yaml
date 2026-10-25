@@ -1,0 +1,53 @@
+# NGUỒN SỰ THẬT DUY NHẤT cho mọi giả định. Chỉ TV1 sửa, qua Pull Request.
+# Mỗi dòng có mã A# trùng với Sổ giả định trên Drive.
+
+universe:
+  source: "VN30 ky xem xet 1/2020"          # A1 – TV2 điền danh sách vào data/raw/vn30_2020.csv
+  require_history_from: "2017-01-01"         # chỉ giữ mã có đủ giá từ ngày này
+
+data:
+  start: "2017-01-01"
+  end: "2026-09-30"
+  benchmark: "VNINDEX"
+  max_ffill_days: 5                          # điền giá trước đó tối đa 5 phiên, có cột cờ imputed
+
+periods:
+  estimation_window_days: 756                # 3 năm x 252 phiên
+  validation: ["2020-01-01", "2021-12-31"]   # chỉ để chọn thiết kế
+  test: ["2022-01-01", "2026-09-30"]         # chạy 1 lần sau khi đóng băng (03/11)
+  lop1_window: ["2023-10-01", "2026-09-30"]  # số liệu Lớp 1
+
+conventions:
+  trading_days_per_year: 252
+  sortino_threshold: "rf"
+  turnover: "half_sum_abs_change"
+
+portfolio:
+  nav_vnd: 100000000000                      # A2 – 100 tỷ đồng
+  lot_size: 100                              # A3
+  cash_return: 0.0                           # A4 – tiền dư không sinh lãi
+  long_only: true
+  w_max: 0.10                                # A5
+  rebalance: "quarterly"                     # A6 – tính cuối quý, giao dịch phiên đầu quý sau
+
+costs:
+  fee_per_side: 0.0015                       # A7 – cần nguồn
+  sell_tax: 0.001                            # A8 – cần nguồn
+
+risk_free:
+  source: "TPCP 10 nam, binh quan theo nam"  # A9
+
+estimation:
+  expected_returns: "capm"                   # A10 – "capm" | "historical"; chốt 02/11 theo validation
+  covariance: "ledoit_wolf"                  # A11 – "ledoit_wolf" | "sample"; chốt 02/11
+  market_risk_premium: null                  # A12 – Damodaran, TV2 tìm số + nguồn
+
+strategies: ["equal_weight", "min_variance", "max_sharpe", "risk_parity"]
+
+sensitivity:
+  w_max: [0.05, 0.10, 0.15, 0.20]
+  rebalance: ["monthly", "quarterly", "semiannual"]
+  fee_per_side: [0.0010, 0.0015, 0.0025, 0.0040]
+  rf_shift: [-0.01, 0.0, 0.01]
+
+seed: 42

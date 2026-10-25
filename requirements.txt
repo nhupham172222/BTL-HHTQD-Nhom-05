@@ -1,0 +1,14 @@
+# Phiên bản cụ thể: TV2 ghi lại sau khi cài thành công (pip freeze), để chạy lại được
+vnstock
+pandas
+numpy
+scipy
+scikit-learn
+PyPortfolioOpt
+cvxpy
+statsmodels
+matplotlib
+seaborn
+pyyaml
+openpyxl
+jupyter
