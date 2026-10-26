@@ -1,20 +1,26 @@
 # NGUỒN SỰ THẬT DUY NHẤT cho mọi giả định. Chỉ TV1 sửa, qua Pull Request.
 # Mỗi dòng có mã A# trùng với Sổ giả định trên Drive.
+# Sửa đổi 26/10/2026 (đề xuất: TV2, duyệt: TV1 ☐): dữ liệu bắt đầu 11/2018 do giới hạn vnstock
+#   cấp miễn phí (tối đa 2.920 ngày lịch sử); cửa sổ ước lượng mở rộng tới 756 phiên.
+#   Xem docs/00_BOI_CANH_CHUNG.md mục 6.
 
 universe:
   source: "VN30 ky xem xet 1/2020"          # A1 – TV2 điền danh sách vào data/raw/vn30_2020.csv
-  require_history_from: "2017-01-01"         # chỉ giữ mã có đủ giá từ ngày này
+  require_history_from: "2018-11-01"         # A13 – chỉ giữ mã có đủ giá từ ngày này (cũ: 2017-01-01)
 
 data:
-  start: "2017-01-01"
+  start: "2018-11-01"                        # A13 – giới hạn vnstock miễn phí 2.920 ngày (cũ: 2017-01-01)
   end: "2026-09-30"
   benchmark: "VNINDEX"
   max_ffill_days: 5                          # điền giá trước đó tối đa 5 phiên, có cột cờ imputed
 
 periods:
-  estimation_window_days: 756                # 3 năm x 252 phiên
-  validation: ["2020-01-01", "2021-12-31"]   # chỉ để chọn thiết kế
-  test: ["2022-01-01", "2026-09-30"]         # chạy 1 lần sau khi đóng băng (03/11)
+  estimation_window_days: 756                # tối đa: 3 năm x 252 phiên
+  min_estimation_window_days: 252            # A14 – mới: chưa đủ 756 phiên thì dùng toàn bộ dữ liệu có sẵn,
+                                             #   tối thiểu 252 phiên (chỉ xảy ra ở validation 2020–2021)
+  estimation_window_mode: "expanding_then_rolling"   # A14 – cửa sổ = dữ liệu từ max(data.start, t − 756 phiên) đến t
+  validation: ["2020-01-01", "2021-12-31"]   # chỉ để chọn thiết kế; ghi window_len mỗi kỳ
+  test: ["2022-01-01", "2026-09-30"]         # chạy 1 lần sau khi đóng băng (03/11); luôn đủ 756 phiên
   lop1_window: ["2023-10-01", "2026-09-30"]  # số liệu Lớp 1
 
 conventions:
