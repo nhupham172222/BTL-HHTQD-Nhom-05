@@ -1,0 +1,493 @@
+{
+  "universe_size": 30,
+  "window": [
+    "2018-11-01",
+    "2026-09-30"
+  ],
+  "max_ffill": 5,
+  "per_ticker": {
+    "BID": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "BVH": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "CTD": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "CTG": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "EIB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "FPT": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "GAS": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "HDB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "HPG": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "MBB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "MSN": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "MWG": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "NVL": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "PLX": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "PNJ": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "POW": {
+      "rows_raw": 1964,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1964,
+      "imputed_cells": 5,
+      "na_before_fill_inside": 9,
+      "gaps_over_limit": [
+        [
+          "2018-12-28",
+          "2019-01-11",
+          9
+        ]
+      ],
+      "jumps_over_limit": []
+    },
+    "REE": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "ROS": {
+      "rows_raw": 940,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2022-08-11",
+      "rows_after_calendar": 940,
+      "imputed_cells": 4,
+      "na_before_fill_inside": 4,
+      "gaps_over_limit": [],
+      "jumps_over_limit": [
+        [
+          "2022-05-04",
+          0.1609
+        ]
+      ]
+    },
+    "SAB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "SBT": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "SSI": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "STB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "TCB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "VCB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "VHM": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "VIC": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "VJC": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "VNM": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "VPB": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    },
+    "VRE": {
+      "rows_raw": 1973,
+      "dup_dates": 0,
+      "nonpositive": 0,
+      "scaled_x1000": true,
+      "first_date": "2018-11-01",
+      "last_date": "2026-09-30",
+      "rows_after_calendar": 1973,
+      "imputed_cells": 0,
+      "na_before_fill_inside": 0,
+      "gaps_over_limit": [],
+      "jumps_over_limit": []
+    }
+  },
+  "excluded": {
+    "POW": "đoạn thiếu 9 phiên (2018-12-28 → 2019-01-11) trước kỳ quyết định đầu → không đủ giá liên tục (A1)"
+  },
+  "notes": [
+    "Ô NaN còn lại thuộc các sự kiện trong data/processed/events.csv (mã ngừng giao dịch/thiếu dài sau kỳ quyết định đầu). Backtest (TV5) phải bán/loại các mã này ở kỳ tái cân bằng kế tiếp."
+  ],
+  "vnindex_source": "vnindex_manual.csv (1973/1973 phiên khớp lịch)",
+  "vnindex_low_precision": false,
+  "vnindex_scaled_x1000": false,
+  "vnindex_range": [
+    659.21,
+    1927.94
+  ],
+  "calendar": {
+    "trading_days": 1973,
+    "first": "2018-11-01",
+    "last": "2026-09-30"
+  },
+  "kept": [
+    "BID",
+    "BVH",
+    "CTD",
+    "CTG",
+    "EIB",
+    "FPT",
+    "GAS",
+    "HDB",
+    "HPG",
+    "MBB",
+    "MSN",
+    "MWG",
+    "NVL",
+    "PLX",
+    "PNJ",
+    "REE",
+    "ROS",
+    "SAB",
+    "SBT",
+    "SSI",
+    "STB",
+    "TCB",
+    "VCB",
+    "VHM",
+    "VIC",
+    "VJC",
+    "VNM",
+    "VPB",
+    "VRE"
+  ],
+  "final_shape": {
+    "rows": 1973,
+    "tickers": 29
+  },
+  "final_na_cells": 1029,
+  "final_imputed_cells": 4,
+  "suspect_unadjusted": {
+    "ROS": [
+      [
+        "2022-05-04",
+        0.1609
+      ]
+    ]
+  },
+  "events": [
+    {
+      "ticker": "ROS",
+      "event": "dung_giao_dich",
+      "start": "2022-08-11",
+      "end": "",
+      "sessions": 1029,
+      "last_close": 2510.0,
+      "note": "giữ trong prices.csv, NaN sau ngày cuối; loại ở kỳ tái cân bằng kế tiếp"
+    }
+  ],
+  "rf": {
+    "rows_source": 2080,
+    "calendar_days": 1973,
+    "na_after_fill": 0,
+    "na_before_first_obs": 0,
+    "rf_annual_min": 0.02038,
+    "rf_annual_max": 0.052140000000000006
+  }
+}

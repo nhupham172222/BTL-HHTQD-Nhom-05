@@ -12,3 +12,6 @@ seaborn
 pyyaml
 openpyxl
 jupyter
+
+--extra-index-url https://vnstocks.com/api/packages
+python-docx

@@ -1,0 +1,2 @@
+ticker,event,start,end,sessions,last_close,note
+ROS,dung_giao_dich,2022-08-11,,1029,2510.0,"giữ trong prices.csv, NaN sau ngày cuối; loại ở kỳ tái cân bằng kế tiếp"

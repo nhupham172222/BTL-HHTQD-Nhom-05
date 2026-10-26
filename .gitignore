@@ -10,3 +10,7 @@ __pycache__/
 ~$*
 .DS_Store
 Thumbs.db
+
+.venv/
+__pycache__/
+vnstock_key.txt
