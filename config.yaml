@@ -1,15 +1,15 @@
 # NGUỒN SỰ THẬT DUY NHẤT cho mọi giả định. Chỉ TV1 sửa, qua Pull Request.
 # Mỗi dòng có mã A# trùng với Sổ giả định trên Drive.
-# Sửa đổi 26/10/2026 (đề xuất: TV2, duyệt: TV1 ☐): dữ liệu bắt đầu 11/2018 do giới hạn vnstock
+# Sửa đổi 26/10/2026: dữ liệu bắt đầu 11/2018 do giới hạn vnstock
 #   cấp miễn phí (tối đa 2.920 ngày lịch sử); cửa sổ ước lượng mở rộng tới 756 phiên.
 #   Xem docs/00_BOI_CANH_CHUNG.md mục 6.
 
 universe:
   source: "VN30 ky xem xet 1/2020"          # A1 – TV2 điền danh sách vào data/raw/vn30_2020.csv
-  require_history_from: "2018-11-01"         # A1/A14 – chỉ giữ mã có đủ giá từ ngày này (cũ: 2017-01-01)
+  require_history_from: "2018-11-01"         # A1/A14 – chỉ giữ mã có đủ giá từ ngày này
 
 data:
-  start: "2018-11-01"                        # A14 – giới hạn vnstock miễn phí 2.920 ngày (cũ: 2017-01-01)
+  start: "2018-11-01"                        # A14 – giới hạn vnstock miễn phí 2.920 ngày
   end: "2026-09-30"
   benchmark: "VNINDEX"
   max_ffill_days: 5                          # điền giá trước đó tối đa 5 phiên, có cột cờ imputed
