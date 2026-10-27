@@ -1,4 +1,4 @@
-# Tối ưu hóa danh mục đầu tư cổ phiếu Việt Nam – Nhóm XX
+# Tối ưu hóa danh mục đầu tư cổ phiếu Việt Nam – Nhóm 05
 
 Bài tập nhóm môn **Hệ Hỗ trợ Quyết định & Trí tuệ Kinh doanh** (HK 261, HCMUT) – Chủ đề 12.
 So sánh 4 chiến lược phân bổ (1/N, Min Variance, Max Sharpe, Risk Parity) bằng backtest cuốn chiếu ngoài mẫu, có phí giao dịch, trên cổ phiếu VN30.
