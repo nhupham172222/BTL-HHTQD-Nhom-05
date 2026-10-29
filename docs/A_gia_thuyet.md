@@ -36,6 +36,7 @@ Ghi chú diễn giải: viết "có liên hệ với", không viết "gây ra". 
 | Ngày | Người | Thay đổi | Lý do |
 |---|---|---|---|
 | 29/10/2026 | TV3 | Soạn bản đầu H1–H7 | Mốc 3. Chờ TV1 xem và chốt. |
+|29/10/2026 |	TV1	Sửa số phiên tập test ở mục 1: "~1.150" → "1.179" (đếm từ data/processed/prices.csv, 01/01/2022–30/09/2026). Không đổi nội dung giả thuyết.	| Số liệu tham khảo ghi chưa chính xác.
 
 ## 5. Nguồn lý thuyết (để TV6 đưa vào Tài liệu tham khảo; kiểm tra lại thông tin trích dẫn trước khi nộp)
 
