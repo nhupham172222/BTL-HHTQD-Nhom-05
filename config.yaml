@@ -37,8 +37,9 @@ portfolio:
   rebalance: "quarterly"                     # A6 – tính cuối quý, giao dịch phiên đầu quý sau
 
 costs:
-  fee_per_side: 0.0015                       # A7 – cần nguồn
-  sell_tax: 0.001                            # A8 – cần nguồn
+  fee_per_side: 0.0018                       # A7 – 0.15% môi giới (giả định, thị trường 0.1–0.3%, trần quy định 0.5%)
+                                             #   + 0.027% phí sàn HOSE/HNX (biểu giá DV chứng khoán hiệu lực 29/4/2025) ≈ 0.177%, làm tròn
+  sell_tax: 0.001                            # A8 – thuế TNCN 0.1% giá trị bán, chỉ chiều bán (Thông tư 87/2026/TT-BTC, hiệu lực 1/7/2026; đối chiếu toàn văn)
 
 risk_free:
   source: "TPCP 10 nam, binh quan theo nam"  # A9
@@ -46,14 +47,15 @@ risk_free:
 estimation:
   expected_returns: "capm"                   # A10 – "capm" | "historical"; chốt 02/11 theo validation
   covariance: "ledoit_wolf"                  # A11 – "ledoit_wolf" | "sample"; chốt 02/11
-  market_risk_premium: null                  # A12 – Damodaran, TV2 tìm số + nguồn
+  market_risk_premium: 0.0792                # A12 – Damodaran ctryprem.xlsx, tổng ERP Việt Nam (Ba2), cập nhật 07/2026
+                                             #   (nếu file gốc khác: 0.0813 là số cập nhật 01/2026 đã kiểm chứng)
 
 strategies: ["equal_weight", "min_variance", "max_sharpe", "risk_parity"]
 
 sensitivity:
   w_max: [0.05, 0.10, 0.15, 0.20]
   rebalance: ["monthly", "quarterly", "semiannual"]
-  fee_per_side: [0.0010, 0.0015, 0.0025, 0.0040]
+  fee_per_side: [0.0010, 0.0018, 0.0025, 0.0040]
   rf_shift: [-0.01, 0.0, 0.01]
 
 seed: 42
