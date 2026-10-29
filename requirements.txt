@@ -1,17 +1,18 @@
-# Phiên bản cụ thể: TV2 ghi lại sau khi cài thành công (pip freeze), để chạy lại được
-vnstock
-pandas
-numpy
-scipy
-scikit-learn
-PyPortfolioOpt
-cvxpy
-statsmodels
-matplotlib
-seaborn
-pyyaml
-openpyxl
-jupyter
-
+# Python 3.14.10 - ghim ngày 29/10/2026 (TV2), lấy từ môi trường đã cài thành công
+# Cài: python -m pip install -r requirements.txt
 --extra-index-url https://vnstocks.com/api/packages
-python-docx
+
+vnstock==5.2.1
+pandas==3.1.0
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+PyPortfolioOpt==1.6.0
+cvxpy==1.9.3
+statsmodels==0.15.0
+matplotlib==3.11.2
+seaborn==0.13.2
+PyYAML==6.0.3
+openpyxl==3.1.5
+jupyter==1.1.1
+python-docx==1.2.0
