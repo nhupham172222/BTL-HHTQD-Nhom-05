@@ -1,0 +1,4 @@
+﻿danh_muc,bien_the,so_ma_trong_cua_so,so_ma_vu_tru,ngay_bat_dau,ngay_ket_thuc,so_phien,rf_cot,loi_suat_nam,do_lech_chuan_nam,sharpe,sortino,mdd,sut_giam_toi_da_pct,sharpe_rf_ngay,vong_quay_tb_moi_lan_can_bang,so_lan_can_bang,config
+1/N,truoc_phi,28,29,2023-10-03,2026-09-30,745,rf_annual_avg_year,0.167581,0.188055,0.7381,1.0095,-0.193032,19.3,0.7402,0.05147,11,config.yaml: lop1_window=2023-10-01..2026-09-30; rebalance=quarterly; fee_per_side=0.0015; sell_tax=0.001; trading_days=252
+1/N,sau_phi,28,29,2023-10-03,2026-09-30,745,rf_annual_avg_year,0.166687,0.188041,0.734,1.0039,-0.193371,19.34,0.7362,0.05147,11,config.yaml: lop1_window=2023-10-01..2026-09-30; rebalance=quarterly; fee_per_side=0.0015; sell_tax=0.001; trading_days=252
+VN-Index,chi_so,,,2023-10-03,2026-09-30,745,rf_annual_avg_year,0.15495,0.185747,0.6864,0.928,-0.181073,18.11,0.6886,,,config.yaml: lop1_window=2023-10-01..2026-09-30; rebalance=quarterly; fee_per_side=0.0015; sell_tax=0.001; trading_days=252
