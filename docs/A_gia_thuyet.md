@@ -9,7 +9,7 @@
 - **Biến kết quả:** Sharpe ngoài mẫu **sau phí** trên tập test 2022Q1–2026Q3 (19 quý). Biến phụ: MDD, vòng quay.
 - **Quy ước so sánh:** mỗi lần chỉ đổi **một** biến, giữ các biến khác ở mặc định của `config.yaml` (w_max 10%, quý, phí 0,15%/chiều + 0,1% thuế bán, μ CAPM, Σ Ledoit–Wolf).
 - **Tính "ủng hộ":** chiều của chênh lệch Sharpe đúng như giả thuyết **và** khoảng bootstrap khối 95% của chênh lệch không chứa 0. Đúng chiều nhưng khoảng chứa 0 → ghi "đúng chiều, chưa đủ bằng chứng".
-- **Cảnh báo cỡ mẫu:** 19 quý (~1.150 phiên) là ít; nhiều chênh lệch có thể không có ý nghĩa thống kê. Điều đó cũng là một kết quả cần báo cáo, không phải thất bại.
+- **Cảnh báo cỡ mẫu:** 19 quý (1.179 phiên) là ít; nhiều chênh lệch có thể không có ý nghĩa thống kê. Điều đó cũng là một kết quả cần báo cáo, không phải thất bại.
 - **Vũ trụ:** 29 mã (POW loại; ROS ngừng giao dịch từ 11/08/2022 nên vắng mặt ở các kỳ sau đó). Mọi ràng buộc phải thỏa N × w_max ≥ 100% (với w_max = 5%: 28 × 5% = 140%, đạt).
 
 ## 2. Bảng giả thuyết cho 6 biến giải thích
