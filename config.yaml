@@ -3,8 +3,8 @@
 # Sửa đổi 26/10/2026: dữ liệu bắt đầu 11/2018 do giới hạn vnstock
 #   cấp miễn phí (tối đa 2.920 ngày lịch sử); cửa sổ ước lượng mở rộng tới 756 phiên.
 #   Xem docs/00_BOI_CANH_CHUNG.md mục 6.
-# Sửa đổi 29/10/2026 (TV2): A7 ghi rõ phí sàn là giả định; A8 đổi nguồn sang Luật 109/2025/QH15;
-#   A12 đổi 0.0792 -> 0.0813 theo ảnh chụp ctryprem (cập nhật 05/01/2026).
+# Sửa đổi 29/10/2026 (TV1 duyệt): A7 giữ 0,15%/chiều và ghi rõ là GIẢ ĐỊNH (không tách phí sàn);
+#   A8 giữ 0,1%, đổi nguồn sang Luật 109/2025/QH15; A12 đổi 0.0792 -> 0.0813 theo Damodaran ctryprem 05/01/2026.
 
 universe:
   source: "VN30 ky xem xet 1/2020"          # A1 – TV2 điền danh sách vào data/raw/vn30_2020.csv
@@ -39,12 +39,12 @@ portfolio:
   rebalance: "quarterly"                     # A6 – tính cuối quý, giao dịch phiên đầu quý sau
 
 costs:
-  fee_per_side: 0.0018                       # A7 – 0.15% môi giới (giả định, mức phổ biến 0.1–0.35%, trần quy định 0.5%)
-                                             #   + ~0.03% phí sàn HOSE (GIẢ ĐỊNH, chưa xác nhận từ văn bản gốc) ≈ 0.18%
-                                             #   độ nhạy 0.10%–0.40% bao trùm (xem sensitivity)
+  fee_per_side: 0.0015                       # A7 – GIẢ ĐỊNH của nhóm: 0.15%/chiều (môi giới + phí sàn gộp)
+                                             #   mức phổ biến các CTCK 0.03–0.35%, trần môi giới 0.5% (TT 128/2018/TT-BTC)
+                                             #   độ nhạy 0.10%–0.40% (xem sensitivity)
   sell_tax: 0.001                            # A8 – thuế TNCN 0.1% giá chuyển nhượng, chỉ chiều bán
-                                             #   (Luật 109/2025/QH15, hiệu lực 1/7/2026; NĐ 253/2026/NĐ-CP; trước đó TT 92/2015/TT-BTC)
-
+                                             #   (Luật 109/2025/QH15, hiệu lực 1/7/2026;
+                                             #   trước đó TT 92/2015/TT-BTC)
 risk_free:
   source: "TPCP 10 nam, binh quan theo nam"  # A9
 
@@ -60,7 +60,7 @@ strategies: ["equal_weight", "min_variance", "max_sharpe", "risk_parity"]
 sensitivity:
   w_max: [0.05, 0.10, 0.15, 0.20]
   rebalance: ["monthly", "quarterly", "semiannual"]
-  fee_per_side: [0.0010, 0.0018, 0.0025, 0.0040]
+  fee_per_side: [0.0010, 0.0015, 0.0025, 0.0040]
   rf_shift: [-0.01, 0.0, 0.01]
   market_risk_premium: [0.0631, 0.0813, 0.0913]   # A12 – thêm mới, khớp cột F14 trong Sổ giả định
 
