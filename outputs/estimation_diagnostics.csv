@@ -1,0 +1,9 @@
+﻿period,decision_date,window_len,n_assets,lw_shrinkage,n_pos_min_variance_sample,n_pos_risk_parity_sample,n_pos_max_sharpe_sample,n_pos_min_variance_ledoit_wolf,n_pos_risk_parity_ledoit_wolf,n_pos_max_sharpe_ledoit_wolf,mu_method_for_max_sharpe,w_max
+validation,2019-12-31,291,29,0.07526308919214085,16,29,29,18,29,29,capm,0.1
+validation,2020-03-31,350,29,0.06436564890626194,16,29,29,16,29,29,capm,0.1
+validation,2020-06-30,412,29,0.04456287654839449,14,29,29,16,29,29,capm,0.1
+validation,2020-09-30,477,29,0.03519385982471893,13,29,29,14,29,29,capm,0.1
+validation,2020-12-31,543,29,0.03232428979842896,14,29,29,14,29,29,capm,0.1
+validation,2021-03-31,601,29,0.02697395042253784,15,29,29,15,29,29,capm,0.1
+validation,2021-06-30,663,29,0.024981385036299576,14,29,29,14,29,29,capm,0.1
+validation,2021-09-30,727,29,0.022099449939074475,14,29,29,14,29,29,capm,0.1
