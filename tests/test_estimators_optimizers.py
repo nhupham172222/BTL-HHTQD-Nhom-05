@@ -136,9 +136,12 @@ def test_vo_nghiem_bao_loi(fake):
             f()  # 10 mã × 5% = 50% < 100%
 
 
-def test_max_sharpe_khong_co_ma_vuot_rf(fake):
+def test_max_sharpe_khong_co_ma_vuot_rf(fake, monkeypatch):
     R, _, _ = fake
     S = E.covariance(R, "sample")
+    base = load()
+    patched = {**base, "estimation": {**base["estimation"], "max_sharpe_if_no_excess": "raise"}}
+    monkeypatch.setattr(O, "load", lambda: patched)
     with pytest.raises(ValueError, match="vượt rf"):
         O.max_sharpe(pd.Series(0.01, index=R.columns), S, 0.05, 0.2)
 

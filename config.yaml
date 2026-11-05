@@ -54,6 +54,8 @@ estimation:
   market_risk_premium: 0.0813                # A12 – Damodaran ctryprem, "ERPs by country", cập nhật 05/01/2026:
                                              #   Việt Nam Ba2, default spread 2.56%, CRP 3.90%, ERP tổng 8.13%
                                              #   (độ nhạy: 6.31% theo CDS, ±1 điểm %)
+  max_sharpe_if_no_excess: "min_variance"   # A15 – Max Sharpe: kỳ nào không có danh mục (dưới w_max) có μ vượt rf
+                                             #   thì dùng Min Variance cho kỳ đó (vd 31/03/2020 với μ lịch sử); báo số kỳ thay thế
 
 strategies: ["equal_weight", "min_variance", "max_sharpe", "risk_parity"]
 
