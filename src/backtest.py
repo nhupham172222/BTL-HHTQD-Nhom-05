@@ -24,11 +24,18 @@ Giả định cần TV1 duyệt (chưa có trong config.yaml):
 - Thiếu tiền do phí: bớt từng lô của lệnh mua có giá trị sau mua vượt mục tiêu nhiều nhất
   (tức thiếu ít nhất), hòa thì theo thứ tự cột của prices.
 - cash_return là lãi suất NĂM, cộng dồn theo ngày giao dịch (1 + cash_return) ** (1/252).
+- Kỳ Max Sharpe không có danh mục nào có μ vượt rf: dùng Min Variance (A15, optimizers.max_sharpe);
+  kỳ đó có cờ `fallback` = True, `summarize` báo tổng số kỳ ở cột n_fallback.
+- rf_shift (lưới độ nhạy): dịch cả rf tại ngày quyết định (Max Sharpe, CAPM) và rf báo cáo (Sharpe, Sortino).
+- Bootstrap chênh lệch Sharpe: khối chồng lấn dài 21 phiên, 2.000 mẫu (đối số hàm, chưa có trong config).
+- Đường NAV (equity_curve) chuẩn hóa = 1 tại ngày giao dịch đầu, nên phí mua lần đầu KHÔNG hiện trên đường net
+  (lợi suất ngày đầu vẫn được tính trong Sharpe và các chỉ số khác).
 """
 from __future__ import annotations
 
 import copy
 import sys
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -39,6 +46,7 @@ sys.path.insert(0, str(ROOT / "src"))
 import estimators  # noqa: E402
 import metrics  # noqa: E402
 import optimizers  # noqa: E402
+from config import load  # noqa: E402
 
 STRATEGIES = ("equal_weight", "min_variance", "max_sharpe", "risk_parity")
 REBALANCE = ("monthly", "quarterly", "semiannual")
@@ -48,7 +56,9 @@ _OVERRIDE_PATHS = {
     "rebalance": ("portfolio", "rebalance"),
     "fee_per_side": ("costs", "fee_per_side"),
     "sell_tax": ("costs", "sell_tax"),
+    "rf_shift": ("risk_free", "rf_shift"),
 }
+VERDICTS = ("ung_ho", "dung_chieu_chua_du_bang_chung", "khong_ung_ho")
 
 
 def load_inputs(root: Path = ROOT) -> tuple[pd.DataFrame, pd.Series, pd.DataFrame]:
@@ -120,33 +130,73 @@ def _validate_weights(w: pd.Series, tickers: list[str], w_max: float, tol: float
 
 
 def compute_target_weights(strategy: str, ret_window: pd.DataFrame, mkt_window: pd.Series,
-                           rf_at_decision: float, tickers, cfg: dict) -> pd.Series:
+                           rf_at_decision: float, tickers, cfg: dict, return_info: bool = False):
     """Tỷ trọng mục tiêu tại ngày quyết định, chỉ dùng dữ liệu trong cửa sổ.
 
     ret_window: lợi suất ngày của `tickers` trong cửa sổ; mkt_window: lợi suất VN-Index cùng các ngày.
     rf_at_decision: rf_annual tại ngày quyết định (KHÔNG dùng rf_annual_avg_year: chứa giá trị tương lai).
     cfg: config đã áp overrides (w_max ở portfolio, phương pháp ở estimation).
+    return_info=True: trả (w, {"fallback": bool}); fallback = kỳ này Max Sharpe phải dùng Min Variance (A15).
+    Cảnh báo khác của bộ giải được phát lại nguyên trạng; cảnh báo fallback chỉ được giữ lại khi đã trả qua cờ.
     """
     if strategy not in STRATEGIES:
         raise ValueError(f"Chiến lược '{strategy}' không hợp lệ, chọn một trong {STRATEGIES}")
     tickers = list(tickers)
     w_max = cfg["portfolio"]["w_max"]
     optimizers.check_feasible(len(tickers), w_max)
+    fallback = False
     if strategy == "equal_weight":
         w = pd.Series(1.0 / len(tickers), index=tickers)
     else:
         est = cfg["estimation"]
         R = ret_window[tickers]
-        cov = estimators.covariance(R, est["covariance"])
-        if strategy == "min_variance":
-            w = optimizers.min_variance(cov, w_max)
-        elif strategy == "risk_parity":
-            w = optimizers.risk_parity(cov, w_max)
-        else:
-            mu = estimators.expected_returns(R, mkt_window, est["expected_returns"],
-                                             rf_at_decision, est.get("market_risk_premium"))
-            w = optimizers.max_sharpe(mu, cov, rf_at_decision, w_max)
-    return _validate_weights(w, tickers, w_max)
+        # "always": cờ fallback không được phụ thuộc bộ lọc cảnh báo bên ngoài (vd python -W ignore)
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            cov = estimators.covariance(R, est["covariance"])
+            if strategy == "min_variance":
+                w = optimizers.min_variance(cov, w_max)
+            elif strategy == "risk_parity":
+                w = optimizers.risk_parity(cov, w_max)
+            else:
+                mu = estimators.expected_returns(R, mkt_window, est["expected_returns"],
+                                                 rf_at_decision, est.get("market_risk_premium"))
+                w = optimizers.max_sharpe(mu, cov, rf_at_decision, w_max)
+        for item in caught:
+            is_fallback = "Min Variance" in str(item.message)
+            fallback = fallback or is_fallback
+            if not (is_fallback and return_info):
+                warnings.warn_explicit(item.message, item.category, item.filename, item.lineno)
+    w = _validate_weights(w, tickers, w_max)
+    return (w, {"fallback": fallback}) if return_info else w
+
+
+def _rf_shift(cfg: dict) -> float:
+    return float(cfg.get("risk_free", {}).get("rf_shift", 0.0))
+
+
+def _close(benchmark) -> pd.Series:
+    return benchmark["close"] if isinstance(benchmark, pd.DataFrame) else benchmark
+
+
+def _target_at(prices: pd.DataFrame, bench: pd.Series, rf_annual: pd.Series, strategy: str,
+               cfg: dict, d: pd.Timestamp) -> tuple[pd.Series, dict]:
+    """Tỷ trọng mục tiêu tại ngày quyết định d – nơi DUY NHẤT cắt cửa sổ, lọc mã và chọn rf.
+
+    bench đã reindex theo prices.index. Trả (w trên mọi cột của prices, info).
+    """
+    per, idx = cfg["periods"], prices.index
+    i = idx.get_loc(d)
+    s = estimation_start(i, per["estimation_window_days"], per["min_estimation_window_days"], idx)
+    win = prices.iloc[s:i + 1]
+    tickers = win.columns[win.notna().all()]  # có giá tại d và không NaN trong cửa sổ
+    ret_w = win[tickers].pct_change(fill_method=None).iloc[1:]
+    mkt_w = bench.iloc[s:i + 1].pct_change(fill_method=None).iloc[1:]
+    rf_d = float(rf_annual.loc[:d].iloc[-1]) + _rf_shift(cfg)
+    w, info = compute_target_weights(strategy, ret_w, mkt_w, rf_d, tickers, cfg, return_info=True)
+    return w.reindex(prices.columns, fill_value=0.0), {
+        "window_len": len(ret_w), "fallback": info["fallback"], "tickers": list(tickers), "rf_at_decision": rf_d,
+    }
 
 
 def _rebalance(shares: np.ndarray, cash: float, p: np.ndarray, w_target: np.ndarray,
@@ -236,15 +286,13 @@ def run_backtest(prices: pd.DataFrame, benchmark: pd.Series, rf: pd.DataFrame,
 
     prices: giá đóng cửa VND (NaN = không có giá); benchmark: VN-Index close (Series hoặc DataFrame có cột
     close); rf: rf.csv (dùng rf_annual tại ngày quyết định); config: dict từ config.load().
-    overrides: {"w_max", "rebalance", "fee_per_side", "sell_tax", "estimation": {...}}.
+    overrides: {"w_max", "rebalance", "fee_per_side", "sell_tax", "rf_shift", "estimation": {...}}.
     Các Series/DataFrame theo kỳ có index = ngày quyết định; `schedule` cho ngày giao dịch tương ứng.
     """
     cfg = apply_overrides(config, overrides)
     per, port, costs = cfg["periods"], cfg["portfolio"], cfg["costs"]
-    if isinstance(benchmark, pd.DataFrame):
-        benchmark = benchmark["close"]
     idx = prices.index
-    bench = benchmark.reindex(idx)
+    bench = _close(benchmark).reindex(idx)
     rf_annual = rf["rf_annual"]
     start, end = pd.Timestamp(start), pd.Timestamp(end)
 
@@ -256,18 +304,11 @@ def run_backtest(prices: pd.DataFrame, benchmark: pd.Series, rf: pd.DataFrame,
     if not schedule:
         raise ValueError(f"Không có kỳ giao dịch nào trong [{start.date()}, {end.date()}]")
 
-    targets, window_len = {}, {}
+    targets, window_len, fallback = {}, {}, {}
     for d, _ in schedule:
-        i = idx.get_loc(d)
-        s = estimation_start(i, per["estimation_window_days"], per["min_estimation_window_days"], idx)
-        win = prices.iloc[s:i + 1]
-        tickers = win.columns[win.notna().all()]  # có giá tại d và không NaN trong cửa sổ
-        ret_w = win[tickers].pct_change(fill_method=None).iloc[1:]
-        mkt_w = bench.iloc[s:i + 1].pct_change(fill_method=None).iloc[1:]
-        rf_d = float(rf_annual.loc[:d].iloc[-1])
-        w = compute_target_weights(strategy, ret_w, mkt_w, rf_d, tickers, cfg)
-        targets[d] = w.reindex(prices.columns, fill_value=0.0)
-        window_len[d] = len(ret_w)
+        targets[d], info = _target_at(prices, bench, rf_annual, strategy, cfg, d)
+        window_len[d] = info["window_len"]
+        fallback[d] = info["fallback"]
 
     sim = dict(prices=prices, schedule=schedule, targets=targets, end=end, nav0=port["nav_vnd"],
                lot=port["lot_size"], cash_return=port["cash_return"],
@@ -281,7 +322,7 @@ def run_backtest(prices: pd.DataFrame, benchmark: pd.Series, rf: pd.DataFrame,
         "w_max": port["w_max"], "rebalance": port["rebalance"],
         "fee_per_side": costs["fee_per_side"], "sell_tax": costs["sell_tax"],
         "estimation": dict(cfg["estimation"]), "lot_size": port["lot_size"], "nav_vnd": port["nav_vnd"],
-        "cash_return": port["cash_return"], "charge_initial": charge_initial,
+        "cash_return": port["cash_return"], "charge_initial": charge_initial, "rf_shift": _rf_shift(cfg),
         "estimation_window_days": per["estimation_window_days"],
         "min_estimation_window_days": per["min_estimation_window_days"],
         "overrides": dict(overrides or {}),
@@ -294,6 +335,7 @@ def run_backtest(prices: pd.DataFrame, benchmark: pd.Series, rf: pd.DataFrame,
         "turnover": net["turnover"],
         "n_holdings": (net["holdings"] > 0).sum(axis=1).rename("n_holdings"),
         "window_len": pd.Series(window_len, name="window_len"),
+        "fallback": pd.Series(fallback, name="fallback", dtype=bool),
         "cash_weight": net["cash_weight"],
         "trades": net["trades"],
         "nav": net["nav"],
@@ -305,12 +347,12 @@ def run_backtest(prices: pd.DataFrame, benchmark: pd.Series, rf: pd.DataFrame,
 
 
 def summarize(result: dict, rf: pd.DataFrame) -> pd.DataFrame:
-    """Bảng chỉ số trước/sau phí (metrics.summary với rf_annual_avg_year, khớp Lớp 1).
+    """Bảng chỉ số trước/sau phí (metrics.summary với rf_annual_avg_year + rf_shift của meta, khớp Lớp 1).
 
     turnover_mean bỏ kỳ đầu (xây danh mục từ 100% tiền mặt), giống cách Lớp 1 đếm số lần tái cân bằng.
     turnover_mean, n_holdings_mean lấy từ bản sau phí. cost_pct_nav0 = tổng phí + thuế / vốn ban đầu.
     """
-    rf_y = rf["rf_annual_avg_year"]
+    rf_y = rf["rf_annual_avg_year"] + result["meta"].get("rf_shift", 0.0)
     trades = result["trades"]
     cost = float(trades["fee"].sum() + trades["tax"].sum()) / result["meta"]["nav_vnd"]
     rows = {name: metrics.summary(result[key], rf_y)
@@ -319,5 +361,164 @@ def summarize(result: dict, rf: pd.DataFrame) -> pd.DataFrame:
     df["turnover_mean"] = float(result["turnover"].iloc[1:].mean())
     df["n_holdings_mean"] = float(result["n_holdings"].mean())
     df["cost_pct_nav0"] = [0.0, cost]
+    df["n_fallback"] = int(result["fallback"].sum())
     df.index.name = "bien_the"
+    return df
+
+
+def target_weights_at(prices: pd.DataFrame, benchmark, rf: pd.DataFrame, strategy: str, config: dict,
+                      decision_date, overrides: dict | None = None,
+                      current_weights: pd.Series | None = None) -> dict:
+    """Tỷ trọng mục tiêu và số cổ phiếu tại một ngày quyết định (dùng cho đề xuất Q4/2026).
+
+    Cửa sổ, lọc mã và rf giống hệt run_backtest (cùng _target_at). decision_date phải là phiên có trong
+    prices.index. Không dùng dữ liệu sau decision_date.
+
+    Số cổ phiếu tính theo giá đóng cửa TẠI decision_date (giá 30/09/2026 khi đề xuất Q4/2026) vì dữ liệu dừng
+    tại đó; giao dịch thật diễn ra ở phiên đầu Q4/2026 nên số lượng và giá thực tế sẽ khác.
+    NAV = portfolio.nav_vnd, làm tròn xuống lô, không trừ chi phí khỏi NAV trước khi tính số cổ phiếu.
+
+    current_weights: danh mục đang giữ để ước tính turnover và chi phí (mặc định 1/N đúng trên các mã khả dụng,
+    không làm tròn lô). Mã đang giữ mà không còn khả dụng được coi là bán hết.
+    cost_pct_nav (thập phân, 0.001 = 0,1% NAV) = Σ mua × fee + Σ bán × (fee + tax), tính trên weights_actual.
+
+    Trả dict: weights, shares, weights_actual, prices (Series trên mọi cột của prices; mã không khả dụng = 0
+    hoặc NaN giá), cash_weight, window_len, fallback, n_holdings, turnover, cost_pct_nav, meta.
+    """
+    cfg = apply_overrides(config, overrides)
+    port, costs = cfg["portfolio"], cfg["costs"]
+    idx = prices.index
+    d = pd.Timestamp(decision_date)
+    if d not in idx:
+        raise ValueError(f"decision_date {d.date()} không phải phiên có trong dữ liệu giá")
+    w, info = _target_at(prices, _close(benchmark).reindex(idx), rf["rf_annual"], strategy, cfg, d)
+
+    px = prices.loc[d]
+    nav, lot = port["nav_vnd"], port["lot_size"]
+    tickers = info["tickers"]
+    shares = pd.Series(0, index=prices.columns, dtype=np.int64)
+    shares[tickers] = (np.floor(w[tickers] * nav / px[tickers] / lot) * lot).astype(np.int64)
+    w_act = (shares * px).fillna(0.0) / nav
+
+    cur = (pd.Series(1.0 / len(tickers), index=tickers) if current_weights is None
+           else pd.Series(current_weights, dtype=float))
+    union = w_act.index.union(cur.index)
+    delta = w_act.reindex(union).fillna(0.0) - cur.reindex(union).fillna(0.0)
+    fee, tax = costs["fee_per_side"], costs["sell_tax"]
+    cost = float(delta.clip(lower=0.0).sum() * fee + (-delta.clip(upper=0.0)).sum() * (fee + tax))
+    return {
+        "weights": w, "shares": shares, "weights_actual": w_act, "prices": px,
+        "cash_weight": float(1.0 - w_act.sum()),
+        "window_len": info["window_len"], "fallback": info["fallback"],
+        "n_holdings": int((shares > 0).sum()),
+        "turnover": metrics.turnover(w_act, cur), "cost_pct_nav": cost,
+        "meta": {
+            "strategy": strategy, "decision_date": str(d.date()), "tickers": tickers,
+            "rf_at_decision": info["rf_at_decision"], "rf_shift": _rf_shift(cfg),
+            "w_max": port["w_max"], "rebalance": port["rebalance"],
+            "fee_per_side": fee, "sell_tax": tax, "estimation": dict(cfg["estimation"]),
+            "lot_size": lot, "nav_vnd": nav, "cash_return": port["cash_return"],
+            "estimation_window_days": cfg["periods"]["estimation_window_days"],
+            "min_estimation_window_days": cfg["periods"]["min_estimation_window_days"],
+            "overrides": dict(overrides or {}),
+        },
+    }
+
+
+def _rf_values(rf_annual, index: pd.Index) -> np.ndarray:
+    """rf năm theo từng ngày của index (cùng cách căn với metrics._daily_rf)."""
+    if isinstance(rf_annual, pd.Series):
+        return rf_annual.reindex(index).ffill().bfill().to_numpy(dtype=float)
+    return np.full(len(index), float(rf_annual))
+
+
+def sharpe_diff_bootstrap(r_a: pd.Series, r_b: pd.Series, rf_annual, n_boot: int = 2000, block_len: int = 21,
+                          seed: int | None = None, rf_annual_b=None) -> dict:
+    """Bootstrap khối chồng lấn cho Sharpe(a) − Sharpe(b), lấy mẫu THEO CẶP (cùng ngày cho cả hai chuỗi).
+
+    Mỗi mẫu rút các khối liên tiếp dài block_len, nối lại rồi cắt về đúng n quan sát. rf đi kèm từng quan sát
+    theo ngày lịch gốc: mẫu mang chỉ số 0..n−1 và rf cùng chỉ số nên metrics.sharpe_ratio không căn lại theo
+    ngày, kể cả khi một ngày xuất hiện nhiều lần.
+
+    rf_annual: số hoặc Series rf năm. rf_annual_b: rf riêng cho chuỗi b, chỉ cần khi hai chuỗi được báo cáo với
+    rf khác nhau (dòng rf_shift của lưới độ nhạy); mặc định dùng chung rf_annual.
+    seed mặc định = config["seed"]. Khoảng 95% là khoảng phân vị của phân phối bootstrap.
+    p_value hai phía = 2 × tỷ lệ mẫu có dấu ngược dấu diff, chặn ≤ 1 (diff = 0 thì p = 1; p = 0 nghĩa là
+    không mẫu nào ngược dấu, tức p < 1/n_boot).
+    """
+    a, b = pd.Series(r_a, dtype=float).dropna(), pd.Series(r_b, dtype=float).dropna()
+    common = a.index.intersection(b.index)
+    if len(common) < 0.9 * min(len(a), len(b)):
+        raise ValueError(f"Hai chuỗi chỉ có {len(common)} ngày chung, ít hơn 90% chuỗi ngắn hơn "
+                         f"({min(len(a), len(b))} ngày)")
+    n = len(common)
+    if n < block_len or block_len < 1:
+        raise ValueError(f"Chuỗi có {n} ngày chung, không đủ cho khối dài {block_len}")
+    a_v, b_v = a.loc[common].to_numpy(), b.loc[common].to_numpy()
+    rf_a = _rf_values(rf_annual, common)
+    rf_b = rf_a if rf_annual_b is None else _rf_values(rf_annual_b, common)
+
+    pos = pd.RangeIndex(n)
+
+    def sharpes_on(ix: np.ndarray | slice) -> tuple[float, float]:
+        return (metrics.sharpe_ratio(pd.Series(a_v[ix], index=pos), pd.Series(rf_a[ix], index=pos)),
+                metrics.sharpe_ratio(pd.Series(b_v[ix], index=pos), pd.Series(rf_b[ix], index=pos)))
+
+    sharpe_a, sharpe_b = sharpes_on(slice(None))
+    diff = sharpe_a - sharpe_b
+
+    rng = np.random.default_rng(load()["seed"] if seed is None else seed)
+    n_blocks = int(np.ceil(n / block_len))
+    starts = rng.integers(0, n - block_len + 1, size=(n_boot, n_blocks))
+    samples = (starts[:, :, None] + np.arange(block_len)).reshape(n_boot, -1)[:, :n]
+    diffs = np.empty(n_boot)
+    for k in range(n_boot):
+        s_a, s_b = sharpes_on(samples[k])
+        diffs[k] = s_a - s_b
+    if not (np.isfinite(diff) and np.isfinite(diffs).all()):
+        raise ValueError("Có Sharpe không xác định (độ lệch chuẩn bằng 0) trong điểm ước lượng hoặc mẫu bootstrap")
+
+    ci_low, ci_high = np.percentile(diffs, [2.5, 97.5])
+    p = 1.0 if diff == 0 else min(1.0, 2.0 * float(np.mean(np.sign(diffs) == -np.sign(diff))))
+    return {"sharpe_a": sharpe_a, "sharpe_b": sharpe_b, "diff": diff, "ci_low": float(ci_low),
+            "ci_high": float(ci_high), "p_value": p, "n_obs": n, "n_boot": n_boot, "block_len": block_len}
+
+
+def verdict(diff: float, ci_low: float, ci_high: float, expected_sign: int) -> str:
+    """Kết luận theo mục 1 của docs/A_gia_thuyet.md. expected_sign: +1 kỳ vọng diff ≥ 0, −1 kỳ vọng diff ≤ 0.
+
+    "ung_ho": đúng chiều và khoảng 95% không chứa 0 (nằm hẳn về phía kỳ vọng).
+    "dung_chieu_chua_du_bang_chung": đúng chiều (kể cả diff = 0, vì giả thuyết là "không thấp/cao hơn").
+    "khong_ung_ho": ngược chiều. Đây chưa phải "bác bỏ": tiêu chí bác bỏ từng giả thuyết nằm ở bảng mục 2.
+    """
+    if expected_sign not in (1, -1):
+        raise ValueError(f"expected_sign phải là 1 hoặc -1, nhận {expected_sign}")
+    if expected_sign * diff < 0:
+        return "khong_ung_ho"
+    far_side = ci_low if expected_sign == 1 else -ci_high  # đầu khoảng gần 0 nhất, theo chiều kỳ vọng
+    return "ung_ho" if diff != 0 and far_side > 0 else "dung_chieu_chua_du_bang_chung"
+
+
+def benchmark_returns(benchmark, index: pd.DatetimeIndex) -> pd.Series:
+    """Lợi suất VN-Index trên đúng index của chuỗi danh mục, ngày đầu tiên = 0.
+
+    Danh mục mua ở giá đóng cửa ngày giao dịch đầu nên chưa chịu biến động của ngày đó; VN-Index cũng phải
+    xuất phát từ giá đóng cửa ngày đó thì hai chuỗi mới so sánh công bằng.
+    """
+    px = _close(benchmark).reindex(index)
+    if px.isna().any():
+        raise ValueError(f"VN-Index thiếu giá tại {list(px.index[px.isna()].date)}")
+    r = px.pct_change(fill_method=None)
+    r.iloc[0] = 0.0
+    return r.rename("VN-Index")
+
+
+def equity_curve(result: dict, benchmark) -> pd.DataFrame:
+    """NAV chuẩn hóa = 1 tại ngày giao dịch đầu, gồm gross, net, VN-Index.
+
+    Lợi suất ngày đầu của net chỉ gồm phí mua lần đầu; chuẩn hóa theo ngày đó nên phí này không hiện trên đường.
+    """
+    curve = {name: (1.0 + result[key]).cumprod() for name, key in (("gross", "returns_gross"), ("net", "returns_net"))}
+    df = pd.DataFrame({name: s / s.iloc[0] for name, s in curve.items()})
+    df["VN-Index"] = (1.0 + benchmark_returns(benchmark, df.index)).cumprod()
     return df
